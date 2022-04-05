@@ -4,9 +4,83 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Checkout_Kata"
+        xmlns:viewModels="clr-namespace:Checkout_Kata.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+    <Window.DataContext>
+        <local:AppVM/>
+    </Window.DataContext>
+    <Grid  DataContext="{Binding Basket}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListView ItemsSource="{Binding AvailableItems}" SelectedItem="{Binding SelectedItem}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewModels:AvailableItem}">
+                    <Label Content="{Binding Name}"></Label>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto" MinWidth="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label>Quantity:</Label>
+            <TextBox Grid.Column="1" Text="{Binding Quantity}">
+            </TextBox>
+        </Grid>
+        <Button Grid.Row="2" Command="{Binding AddItemCommand}">Add Item</Button>
+        <ListView Grid.Row="3" ItemsSource="{Binding Basket}" >
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewModels:BasketItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Margin="5">Item :</Label>
+                        <Label  Margin="5" Content="{Binding Item.Name}"></Label>
+                        <Label Margin="5">Price : </Label>
+                        <Label Margin="5" Content="{Binding Item.UnitPrice}"></Label>
+                        <Label Margin="5">Quantity :</Label>
+                        <Label Margin="5" Content="{Binding Quantity}"></Label>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel Grid.Row="4" Orientation="Horizontal">
+            <Label Margin="5">Total : </Label>
+            <Label Margin="5" Content="{Binding Total}"></Label>
+            <Label Content="B Promotion Applied" Margin="5">
+                <Label.Resources>
+                    <Style TargetType="{x:Type Label}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding BPromo}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding BPromo}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Resources>
+            </Label>
+            <Label Content="D Promotion Applied" Margin="5">
+                <Label.Resources>
+                    <Style TargetType="{x:Type Label}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DPromo}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DPromo}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Resources>
+            </Label>
+        </StackPanel>
+
     </Grid>
 </Window>
